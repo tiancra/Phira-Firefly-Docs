@@ -1,0 +1,14 @@
+{
+  "name": "phira-firefly-docs",
+  "version": "0.9.4-CBT1",
+  "description": "Phira-Firefly 文档站点（基于 VitePress）",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  }
+}

@@ -1,8 +1,9 @@
-book
+# VitePress build output
+.vitepress/dist
+.vitepress/cache
 
-# gettext
-*.pot
-*.mo
+# Node
+node_modules
 
 # m*ther f*cking Mac
 .DS_Store
