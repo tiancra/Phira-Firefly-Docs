@@ -1,6 +1,6 @@
 {
   "name": "phira-firefly-docs",
-  "version": "0.9.4-CBT1",
+  "version": "0.9.4-CBT3",
   "description": "Phira-Firefly 文档站点（基于 VitePress）",
   "type": "module",
   "scripts": {

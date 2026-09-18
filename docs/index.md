@@ -40,5 +40,5 @@ features:
   - icon:
       svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>'
     title: 更多功能
-    details: 文言本地化、手柄支持、XC-SIM 谱面分区、血条 Mod、启动界面、本地谱面联机等。
+    details: 文言本地化、手柄支持、XC-SIM 谱面分区、血条 Mod、启动界面、本地谱面联机、系统播放控件、谱面渲染等。
 ---

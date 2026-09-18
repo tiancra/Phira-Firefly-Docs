@@ -19,5 +19,5 @@ OpenHarmony：[here](./OpenHarmony.md)
   ```
 
   产物为 `target/aarch64-linux-android/release/libphira.so`，需要先安装 Android SDK / NDK r27c 与 `cargo-ndk`。
-- 版本号：当前为 `0.9.4-CBT1`。
+- 版本号：当前为 `0.9.4-CBT3`。
 - 依赖说明：部分组件使用分支维护的独立仓库版本，首次编译拉取依赖时间可能稍长。
