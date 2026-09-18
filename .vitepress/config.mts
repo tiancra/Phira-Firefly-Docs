@@ -4,7 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   lang: 'zh-CN',
   title: 'Phira-Firefly',
-  description: 'Phira-Firefly 文档 —— 基于 Phira 的非商业社区音乐节奏游戏',
+  description: 'Phira-Firefly —— 基于 Phira 的非商业社区音乐节奏游戏',
 
   srcDir: 'docs',
 
