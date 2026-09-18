@@ -20,7 +20,7 @@ export default defineConfig({
 
   themeConfig: {
     logo: '/icon.png',
-    siteTitle: 'Phira-Firefly 文档',
+    siteTitle: 'Phira-Firefly',
 
     nav: [
       { text: '首页', link: '/' },
