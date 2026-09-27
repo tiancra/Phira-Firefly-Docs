@@ -16,6 +16,7 @@ export default defineConfig({
     ['link', { rel: 'apple-touch-icon', href: '/icon.png' }],
     ['meta', { name: 'theme-color', content: '#0f0f12' }],
     ['meta', { property: 'og:image', content: '/firefly.png' }],
+    ['meta', { name: 'google-site-verification', content: 'K9HbVdSr9HHrveSnFksHtPr3c0hj65qh_uo9QtcyESo' }],
   ],
 
   themeConfig: {
