@@ -90,48 +90,145 @@ fork 的 `phira/src/lib.rs` 里，Android 用 JNI（`Java_quad_1native_QuadNativ
 
 ## 在 Linux 服务器上编译 .so
 
-按 [OpenHarmony 构建指南](./OpenHarmony) 的流程，结合本仓库：
+> DevEco Studio 没有 Linux 版，所以内核 `.so` 在你的 Linux 服务器上编译，HAP 打包在 Windows 的 DevEco Studio 里做。下面每一步都可直接复制执行。
+
+### 第 1 步：装 Rust 与 ohos target
 
 ```bash
-# 1. 装 Rust ohos target
+# 没装 Rust 的话先装（已装跳过）
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+
+# 加鸿蒙 arm64 编译目标
 rustup target add aarch64-unknown-linux-ohos
+```
 
-# 2. 下载 Command Line Tools for HMOS（≥ 6.0.0 / API 20）并设置：
-export OHOS_NDK_HOME=/你的路径/command-line-tools/sdk/default/openharmony
+> Phira-Firefly 的 `rust-toolchain.toml` 指定了 nightly，进入仓库目录后 rustup 会自动切到对应 nightly 并下载。target 装到当前 toolchain 即可。
 
-# 3. 装 ohrs
+### 第 2 步：下载 Command Line Tools for HMOS 并配置 OHOS_NDK_HOME
+
+在华为开发者官网下载 Linux 版 **Command Line Tools for HMOS**（版本 ≥ 6.0.0 / API 20）：
+
+https://developer.huawei.com/consumer/cn/download/command-line-tools-for-hmos
+
+```bash
+mkdir -p /opt/ohos-sdk && cd /opt/ohos-sdk
+# 把下载的压缩包放到这里，解压（按实际文件名）
+unzip commandline-tools-linux-*.zip
+# 确认目录结构：解压后有 command-line-tools/sdk/default/openharmony/native/...
+ls command-line-tools/sdk/default/openharmony/native/build/cmake/
+
+# 设置环境变量并写入 ~/.bashrc 永久生效
+echo 'export OHOS_NDK_HOME=/opt/ohos-sdk/command-line-tools/sdk/default/openharmony' >> ~/.bashrc
+source ~/.bashrc
+
+# 验证（必须输出 OK）
+test -f "$OHOS_NDK_HOME/native/build/cmake/ohos.toolchain.cmake" && echo OK
+```
+
+### 第 3 步：装 ohrs 构建工具
+
+```bash
 cargo install ohrs
+```
 
-# 4. 配置 .cargo/config.toml（CMAKE/toolchain/ninja 指向 NDK）
-#    本仓库提供现成模板：ohos-build/.cargo/config.toml
+> 编译较久（Rust 工具链），等它完成即可。装完 `ohrs --version` 可验证。
 
-# 5. 编译（必须进 phira 目录）
+### 第 4 步：准备仓库与构建配置
+
+```bash
+git clone https://github.com/tiancra/Phira-Firefly.git
+cd Phira-Firefly
+
+# 放 .cargo/config.toml（CMAKE/toolchain/ninja 指向 NDK，模板见 ohos-build 包）
+mkdir -p .cargo
+cp /你的路径/ohos-build/.cargo/config.toml .cargo/
+```
+
+### 第 5 步：构建
+
+```bash
+# 用一键脚本（自动检查 target/ohrs/NDK）
+bash /你的路径/ohos-build/build-ohos.sh
+
+# 或手动执行：
 cd phira
 ohrs build --release --arch aarch
 ```
 
-产物：`phira/dist/arm64-v8a/libphira.so`。
+产物在 `phira/dist/arm64-v8a/libphira.so`：
 
-### 静态库（prpr-avc）
+```bash
+ls -lh phira/dist/arm64-v8a/libphira.so
+```
+
+### 第 6 步：把 .so 传回 Windows
+
+```bash
+scp phira/dist/arm64-v8a/libphira.so 你的用户名@你的WindowsIP:D:/harmony/entry/libs/arm64-v8a/
+```
+
+> 目录不存在就手动在 Windows 上创建；也可以直接用共享文件夹/U盘拷贝。
+
+### 静态库（prpr-avc）说明
 
 视频解码静态库会自动获取：构建脚本读取 `prpr-avc/ffmpeg-version`，没有对应版本就自动从 GitHub Release 下载（见 [静态库](./StaticLib)）。**服务器需要能访问 GitHub Release**；下载失败就手动放。
 
-### 一键脚本
+### Linux 构建常见报错
 
-配套的 `ohos-build` 包已把上述步骤写成脚本（检查 target / 装 ohrs / 校验 NDK / 构建），按包内 README 使用即可。
+| 报错 | 原因与处理 |
+| --- | --- |
+| 找不到 cmake / CMakeLists 相关错误 | `OHOS_NDK_HOME` 没设对或没生效：`echo $OHOS_NDK_HOME`，重新 `source ~/.bashrc` |
+| prpr-avc 静态库下载失败 | 服务器访问不了 GitHub Release。手动下载对应 target 的静态库包解压到 `prpr-avc/static-lib/<target>/` 并写 `.version`（见[静态库](./StaticLib)） |
+| 奇奇怪怪的编译报错 | 检查 Command Line Tools 版本 ≥ 6.0.0（API 20）；或换 WSL/arm64 Mac 编译 |
+| 缺 nightly 工具链 | 进入仓库目录跑 `rustup toolchain list`，让 rustup 自动装 `rust-toolchain.toml` 指定的版本 |
 
 ## 在 Windows 上打包 HAP
 
-1. 把 `libphira.so` 复制到外壳工程的 `entry/libs/arm64-v8a/`。
-2. 把游戏 `assets/` 复制到 `entry/src/main/resources/resfile/assets`（**黑屏多半是资源没放全**，可从官方 Release 拿一份对比）。
-3. DevEco Studio 打开工程 → `Project Structure → Signing configs → Automatically generate signature`（需登录华为开发者账号）→ Apply。
-4. 连接模拟器/真机（设备需在 DevEco 中注册），编译运行。
+### 第 1 步：获取外壳工程
 
-## 常见问题
+```powershell
+git clone https://github.com/TeamFlos/phira-ohos
+```
+
+用 **DevEco Studio → File → Open** 打开这个工程，首次打开会自动 Sync 下载依赖（耐心等）。
+
+### 第 2 步：放 .so 和游戏资源
+
+```powershell
+# 1. .so 放进外壳工程（没有 libs 目录就手动创建）
+#    D:\harmony\entry\libs\arm64-v8a\libphira.so
+
+# 2. 把游戏 assets 整个复制进去（不放全会黑屏）
+#    来源：D:\Phira\Phira-Firefly\assets
+#    目标：D:\harmony\entry\src\main\resources\resfile\assets
+Copy-Item "D:\Phira\Phira-Firefly\assets" "D:\harmony\entry\src\main\resources\resfile\assets" -Recurse
+```
+
+> 资源不全会导致启动黑屏。缺文件可以从官方 Phira Release 里拿一份对比补全。
+
+### 第 3 步：签名
+
+1. 注册/登录**华为开发者账号**（免费，https://developer.huawei.com/consumer/）
+2. DevEco Studio → **File → Project Structure → Signing Configs**
+3. 勾选 **Automatically generate signature**，登录华为账号
+4. 点 **Apply**，工程自动触发 Sync 并生成调试签名
+
+### 第 4 步：运行到模拟器
+
+1. **Device Manager**（右侧边栏）→ **Local Emulator** → 点 + 新建设备（选 Phone）
+2. 首次会提示下载系统镜像（SDK/模拟器已放 D 盘的话会下到 D 盘）
+3. 启动模拟器，等它完全开机（冷启动较慢）
+4. 菜单 **Run → Run 'entry'**，选择模拟器，编译安装
+
+看到游戏画面进主菜单即成功。之后日常调试用热启动就行。
+
+### 运行常见问题
 
 | 现象 | 处理 |
 | --- | --- |
-| 启动黑屏 | 检查 `resfile/assets` 资源是否完整 |
-| 提示找不到某个导出函数 | fork 与上游 N-API 接口差异，按接口清单补导出 |
-| 奇怪的编译报错 | 换 WSL/arm64 Mac 编译，或检查 `OHOS_NDK_HOME` 与 config.toml 路径 |
+| 启动黑屏 | `resfile/assets` 资源不完整，补全重装 |
+| 提示找不到某个导出函数 / so 加载失败 | fork 与上游内核 N-API 接口差异，按上文接口清单在 `phira/src/lib.rs` 补 `#[napi]` 导出，重编 .so |
+| 签名报错 / 无法 Sync | 确认已登录华为账号、网络可达；自动签名首次要联网生成证书 |
+| 模拟器起不来 | 先冷启动一次；还不行在 Device Manager 删掉重建 |
 | 输入法弹不出 / 文字进不去 | 外壳需调 `set_input_text` 转发输入法文本 |
