@@ -44,6 +44,7 @@ export default defineConfig({
           { text: '画面与演出', link: '/firefly/visuals' },
           { text: '新手引导与界面', link: '/firefly/experience' },
           { text: '界面外观', link: '/firefly/appearance' },
+          { text: '主题开发指南', link: '/firefly/theme-dev' },
           { text: '本地化', link: '/firefly/l10n' },
           { text: '设备与谱面', link: '/firefly/devices' },
           { text: '联机与账户', link: '/firefly/multiplayer' },
