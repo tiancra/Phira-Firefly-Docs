@@ -203,6 +203,7 @@ export default defineConfig({
           { text: 'iOS', link: '/phira_build_guide/iOS' },
           { text: 'Android', link: '/phira_build_guide/Android' },
           { text: 'OpenHarmony', link: '/phira_build_guide/OpenHarmony' },
+          { text: '鸿蒙外壳开发指南', link: '/phira_build_guide/harmony-shell' },
         ],
       },
 

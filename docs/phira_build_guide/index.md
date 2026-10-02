@@ -6,6 +6,7 @@ macOS：[here](./macOS.md)
 iOS：[here](./iOS.md)
 Android：[here](./Android.md)
 OpenHarmony：[here](./OpenHarmony.md)
+**鸿蒙外壳开发指南**：[here](./harmony-shell)（把 Phira-Firefly 打包成 HarmonyOS NEXT 应用的完整流程与分工）
 
 ## Phira-Firefly 构建说明
 
@@ -19,5 +20,6 @@ OpenHarmony：[here](./OpenHarmony.md)
   ```
 
   产物为 `target/aarch64-linux-android/release/libphira.so`，需要先安装 Android SDK / NDK r27c 与 `cargo-ndk`。
+- OpenHarmony / HarmonyOS：`ohrs build --release --arch aarch`（在 Linux 服务器上编译，见[鸿蒙外壳开发指南](./harmony-shell)）。
 - 版本号：当前为 `0.9.4-CBT3`。
 - 依赖说明：部分组件使用分支维护的独立仓库版本，首次编译拉取依赖时间可能稍长。
