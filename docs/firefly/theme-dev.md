@@ -48,8 +48,8 @@ my-theme/
 | --- | --- |
 | `background` | 主界面背景 |
 | `abstract` | 抽象背景 |
-| `boot` | 启动画面图 |
-| `splash` | 闪屏图 |
+| `splash` | 启动界面（开屏画面） |
+| `boot` | 启动界面后的 Logo 画面 |
 | `player` | 玩家形象 |
 | `icon` | 游戏图标 |
 | `rank_phi` / `rank_fc` / `rank_s` / `rank_a` / `rank_b` / `rank_c` / `rank_f` / `rank_v` | 结算界面的各评级徽章 |
@@ -60,7 +60,7 @@ my-theme/
 | key | 替换内容 |
 | --- | --- |
 | `bgm` | 主界面背景音乐 |
-| `splash` | 闪屏音效 |
+| `splash` | 启动界面音乐 |
 | `button` / `button_large` | 按钮音效 |
 | `switch` / `click` | 开关 / 点击音效 |
 | `drag` / `flick` | 游玩中拖拽 / 滑动音效 |
@@ -69,7 +69,7 @@ my-theme/
 | `enterlibrary` | 进入曲库音效 |
 | `chartpreview` | 谱面预览音效 |
 | `startplaying` | 开始游玩音效 |
-| `entersplash` | 进入闪屏音效 |
+| `entersplash` | 进入启动界面音效 |
 | `trackskip` | 跳过曲目音效 |
 | `enter` | 通用进入音效 |
 | `toast_ok` / `toast_warning` / `toast_error` | 提示音效 |
